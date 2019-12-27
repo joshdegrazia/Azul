@@ -9,7 +9,7 @@ using Unity.Jobs;
 using Unity.Transforms;
 using UnityEngine;
 
-namespace Azul.Systems.Initialization {
+namespace Azul.Systems.Commands {
     [AlwaysSynchronizeSystem]
     [UpdateBefore(typeof(RequiresInitializationEndFrameSystem))]
     public class InitializeBagSystem : JobComponentSystem {
