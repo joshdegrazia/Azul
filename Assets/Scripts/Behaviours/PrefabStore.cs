@@ -23,7 +23,8 @@ namespace Azul.Behaviours {
 
         private void Awake() {
             this.InitializeSingleton();
-        
+ 
+            // TODO: Cleanup BlobAssetStore object. This appears to be causing the memory leak errors that appear on build.
             GameObjectConversionSettings settings = GameObjectConversionSettings.FromWorld(World.DefaultGameObjectInjectionWorld, 
                                                                                            new BlobAssetStore());
             this.BlackTilePrefab = GameObjectConversionUtility.ConvertGameObjectHierarchy(this.BlackTileGameObjectPrefab, settings);
