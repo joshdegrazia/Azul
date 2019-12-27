@@ -11,7 +11,7 @@ namespace Azul.Behaviours {
         private void Awake() {
             this.InitializeSingleton();
 
-            this.EntityManager = World.Active.EntityManager;
+            this.EntityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
         }
 
         private void InitializeSingleton() {
