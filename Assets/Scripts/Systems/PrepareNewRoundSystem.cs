@@ -1,4 +1,5 @@
 using Azul.Components;
+using Azul.Components.Input;
 using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Entities;
@@ -31,10 +32,10 @@ namespace Azul.Systems {
             this.Random.InitState();
 
             this.TileLocations = new Dictionary<int, float3>();
-            this.TileLocations.Add(0, new float3(0.2f, 0, 0.2f));
-            this.TileLocations.Add(1, new float3(0.2f, 0, -0.2f));
-            this.TileLocations.Add(2, new float3(-0.2f, 0, 0.2f));
-            this.TileLocations.Add(3, new float3(-0.2f, 0, -0.2f));
+            this.TileLocations.Add(0, new float3(1f, 0, 1f));
+            this.TileLocations.Add(1, new float3(1f, 0, -1f));
+            this.TileLocations.Add(2, new float3(-1f, 0, 1f));
+            this.TileLocations.Add(3, new float3(-1f, 0, -1f));
         }
 
         protected override JobHandle OnUpdate(JobHandle inputDeps) {
@@ -51,24 +52,17 @@ namespace Azul.Systems {
             base.Entities.WithAll<FactoryTile>()
                          .WithNone<CenterFactoryTile>()
                          .WithoutBurst()
-                         .ForEach((Entity factoryTileEntity, in NonUniformScale scale) => {
+                         .ForEach((Entity factoryTileEntity, in Translation translation) => {
                              DynamicBuffer<FactoryTileContentsElement> factoryTileBuffer = entityCommandBuffer.AddBuffer<FactoryTileContentsElement>(factoryTileEntity);
 
                              while (bagTileBuffer.Length > 0 && factoryTileBuffer.Length < 4) {
                                  int bagTileIndex = this.Random.NextInt(0, bagTileBuffer.Length);
 
                                  Entity tileEntity = bagTileBuffer[bagTileIndex].TileEntity;
-                                 
-                                 entityCommandBuffer.SetComponent(tileEntity, new Parent {
-                                     Value = factoryTileEntity
-                                 });
 
-                                 entityCommandBuffer.SetComponent(tileEntity, new NonUniformScale {
-                                     Value = 1 / scale.Value
-                                 });
-                                 
+                                 entityCommandBuffer.AddComponent(tileEntity, typeof(ListenForMouseClick));
                                  entityCommandBuffer.SetComponent(tileEntity, new Translation {
-                                     Value = this.TileLocations[factoryTileBuffer.Length]
+                                     Value = translation.Value + this.TileLocations[factoryTileBuffer.Length]
                                  });
 
                                  factoryTileBuffer.Add(new FactoryTileContentsElement {

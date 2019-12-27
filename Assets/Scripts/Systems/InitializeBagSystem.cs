@@ -19,7 +19,7 @@ namespace Azul.Systems.Commands {
             base.Entities.WithAll<Bag>()
                     .WithAll<RequiresInitialization>()
                     .WithoutBurst()
-                    .ForEach((Entity bagEntity, in NonUniformScale scale) => {
+                    .ForEach((Entity bagEntity, in Translation translation) => {
                         DynamicBuffer<BagContentsElement> buffer = entityCommandBuffer.AddBuffer<BagContentsElement>(bagEntity);
 
                         List<Entity> list = new List<Entity>(AzulConstants.TilesPerColor * 5);
@@ -27,13 +27,8 @@ namespace Azul.Systems.Commands {
                             foreach (Entity tilePrefab in PrefabStore.Instance.TilePrefabs) {
                                 Entity newTileEntity = entityCommandBuffer.Instantiate(tilePrefab);
 
-                                entityCommandBuffer.AddComponent(newTileEntity, typeof(LocalToParent));
-                                entityCommandBuffer.AddComponent(newTileEntity, new Parent {
-                                    Value = bagEntity
-                                });
-
-                                entityCommandBuffer.AddComponent(newTileEntity, new NonUniformScale {
-                                    Value = 1 / scale.Value
+                                entityCommandBuffer.SetComponent(newTileEntity, new Translation {
+                                    Value = translation.Value
                                 });
 
                                 buffer.Add(new BagContentsElement {
