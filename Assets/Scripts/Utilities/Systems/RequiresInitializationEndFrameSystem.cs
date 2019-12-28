@@ -1,9 +1,9 @@
-using Azul.Components;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
+using Utilities.Components;
 
-namespace Azul.Systems {
+namespace Utilities.Systems {
     [AlwaysSynchronizeSystem]
     public class RequiresInitializationEndFrameSystem : JobComponentSystem {
         protected override JobHandle OnUpdate(JobHandle inputDeps) {
