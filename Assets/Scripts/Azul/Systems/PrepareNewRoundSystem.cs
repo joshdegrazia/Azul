@@ -1,5 +1,6 @@
 using Azul.Components;
 using Azul.Components.Input;
+using Azul.Utilities;
 using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Entities;
@@ -10,7 +11,7 @@ using UnityEngine;
 
 namespace Azul.Systems {
     [AlwaysSynchronizeSystem]
-    [UpdateBefore(typeof(PrepareNewRoundEndFrameSystem))]
+    [UpdateBefore(typeof(DestroyEntityAfterUpdateSystem))]
     public class PrepareNewRoundSystem : JobComponentSystem {
         private EntityQuery BagQuery;
         private EntityQuery PrepareNewRoundQuery;

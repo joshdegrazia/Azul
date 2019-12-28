@@ -1,4 +1,5 @@
 using Azul.Components;
+using Azul.Utilities;
 using Unity.Entities;
 using UnityEngine;
 
@@ -24,7 +25,8 @@ namespace Azul.Behaviours {
         }
 
         public void OnDealTilesFromBagButtonClicked() {
-            this.EntityManager.CreateEntity(typeof(PrepareNewRound));
+            this.EntityManager.CreateEntity(typeof(PrepareNewRound),
+                                            typeof(DestroyEntityAfterUpdate));
         }
     }
 }
