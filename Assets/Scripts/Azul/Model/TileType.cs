@@ -1,5 +1,5 @@
 namespace Azul.Model {
-    public enum TileType {
+    public enum TileType : short {
         Black,
         Blue,
         Cyan,
