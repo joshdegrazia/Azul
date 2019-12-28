@@ -1,18 +1,21 @@
-using Azul.Components.Input;
+using Input.Components;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Physics;
 using Unity.Physics.Systems;
 
-namespace Azul.Systems.Input {
-
+namespace Input.Systems {
+    [AlwaysSynchronizeSystem]
     [UpdateAfter(typeof(BuildPhysicsWorld)),
      UpdateBefore(typeof(MouseClickEndFrameSystem)),
      UpdateBefore(typeof(EndFramePhysicsSystem))]
     public class MouseClickSystem : JobComponentSystem {
         private BuildPhysicsWorld BuildPhysicsWorld;
         private EntityQuery MouseClickListenerQuery;
+
+        private Entity CurrentEntity;
         
         protected override void OnCreate() {
             this.BuildPhysicsWorld = base.World.GetOrCreateSystem<BuildPhysicsWorld>();
@@ -20,6 +23,8 @@ namespace Azul.Systems.Input {
             this.MouseClickListenerQuery = base.GetEntityQuery(new EntityQueryDesc {
                 All = new ComponentType[] { typeof(ListenForMouseClick) }
             });
+
+            this.CurrentEntity = Entity.Null;
         }
 
         protected override JobHandle OnUpdate(JobHandle inputDeps) {
@@ -28,6 +33,8 @@ namespace Azul.Systems.Input {
                 return inputDeps;
             }
 
+            
+
             UnityEngine.Ray unityRay = UnityEngine.Camera.main.ScreenPointToRay(UnityEngine.Input.mousePosition);
             RaycastInput raycastInput = new RaycastInput {
                 Start = unityRay.origin,
@@ -35,11 +42,27 @@ namespace Azul.Systems.Input {
                 Filter = CollisionFilter.Default
             };
 
+            CollisionWorld collisionWorld = this.BuildPhysicsWorld.PhysicsWorld.CollisionWorld;
+
             RaycastHit raycastHit;
-            if (this.BuildPhysicsWorld.PhysicsWorld.CollisionWorld.CastRay(raycastInput, out raycastHit)) {
-                UnityEngine.Debug.Log("Mouse hit");
-            } else {
-                UnityEngine.Debug.Log("Mouse did not hit");
+            if (collisionWorld.CastRay(raycastInput, out raycastHit)) {
+                RigidBody rigidbody = collisionWorld.Bodies[raycastHit.RigidBodyIndex];
+                
+                EntityCommandBuffer buffer = new EntityCommandBuffer(Allocator.TempJob);
+
+                // this is feelin hella not worth
+                // todo: replace with entity query declared above
+                base.Entities.WithAll<ListenForMouseClick>()
+                             .WithoutBurst()
+                             .ForEach((ref Entity entity) => {
+                                 if (entity.Equals(rigidbody.Entity)) {
+                                     buffer.AddComponent(rigidbody.Entity, typeof(MouseClick));
+                                 }
+                                 
+                             }).Run();
+
+                buffer.Playback(base.EntityManager);
+                buffer.Dispose();
             }
 
             return inputDeps;
