@@ -1,13 +1,12 @@
 using Azul.Components;
-using Azul.Components.Input;
-using Azul.Utilities;
+using Input.Components;
 using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Transforms;
-using UnityEngine;
+using Utilities.Systems;
 
 namespace Azul.Systems {
     [AlwaysSynchronizeSystem]
@@ -54,19 +53,19 @@ namespace Azul.Systems {
                          .WithNone<CenterFactoryTile>()
                          .WithoutBurst()
                          .ForEach((Entity factoryTileEntity, in Translation translation) => {
-                             DynamicBuffer<FactoryTileContentsElement> factoryTileBuffer = entityCommandBuffer.AddBuffer<FactoryTileContentsElement>(factoryTileEntity);
+                             DynamicBuffer<FactoryTileContentsElement> factoryTileContentsBuffer = entityCommandBuffer.AddBuffer<FactoryTileContentsElement>(factoryTileEntity);
 
-                             while (bagTileBuffer.Length > 0 && factoryTileBuffer.Length < 4) {
+                             while (bagTileBuffer.Length > 0 && factoryTileContentsBuffer.Length < 4) {
                                  int bagTileIndex = this.Random.NextInt(0, bagTileBuffer.Length);
 
                                  Entity tileEntity = bagTileBuffer[bagTileIndex].TileEntity;
 
                                  entityCommandBuffer.AddComponent(tileEntity, typeof(ListenForMouseClick));
                                  entityCommandBuffer.SetComponent(tileEntity, new Translation {
-                                     Value = translation.Value + this.TileLocations[factoryTileBuffer.Length]
+                                     Value = translation.Value + this.TileLocations[factoryTileContentsBuffer.Length]
                                  });
 
-                                 factoryTileBuffer.Add(new FactoryTileContentsElement {
+                                 factoryTileContentsBuffer.Add(new FactoryTileContentsElement {
                                      TileEntity = tileEntity
                                  });
 

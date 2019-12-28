@@ -1,7 +1,7 @@
 using Azul.Components;
-using Azul.Utilities;
 using Unity.Entities;
 using UnityEngine;
+using Utilities.Components;
 
 namespace Azul.Behaviours {
     public class UIController : MonoBehaviour {
