@@ -33,8 +33,6 @@ namespace Input.Systems {
                 return inputDeps;
             }
 
-            
-
             UnityEngine.Ray unityRay = UnityEngine.Camera.main.ScreenPointToRay(UnityEngine.Input.mousePosition);
             RaycastInput raycastInput = new RaycastInput {
                 Start = unityRay.origin,
@@ -49,8 +47,7 @@ namespace Input.Systems {
                 RigidBody rigidbody = collisionWorld.Bodies[raycastHit.RigidBodyIndex];
                 
                 EntityCommandBuffer buffer = new EntityCommandBuffer(Allocator.TempJob);
-
-                // this is feelin hella not worth
+                // this is feelin hella not worth - should just check if it has the component
                 // todo: replace with entity query declared above
                 base.Entities.WithAll<ListenForMouseClick>()
                              .WithoutBurst()

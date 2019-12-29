@@ -2,7 +2,7 @@ using Unity.Entities;
 
 namespace Azul.Components {
     [GenerateAuthoringComponent]
-    public struct SelectionArea : IComponentData {
-
+    public struct ParentFactoryTile : IComponentData {
+        public Entity Value;
     }
 }

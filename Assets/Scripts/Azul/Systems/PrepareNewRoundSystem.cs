@@ -54,6 +54,10 @@ namespace Azul.Systems {
                          .WithoutBurst()
                          .ForEach((Entity factoryTileEntity, in Translation translation) => {
                              DynamicBuffer<FactoryTileContentsElement> factoryTileContentsBuffer = entityCommandBuffer.AddBuffer<FactoryTileContentsElement>(factoryTileEntity);
+                             
+                             ParentFactoryTile parentComponent = new ParentFactoryTile {
+                                 Value = factoryTileEntity
+                             };
 
                              while (bagTileBuffer.Length > 0 && factoryTileContentsBuffer.Length < 4) {
                                  int bagTileIndex = this.Random.NextInt(0, bagTileBuffer.Length);
@@ -64,6 +68,8 @@ namespace Azul.Systems {
                                  entityCommandBuffer.SetComponent(tileEntity, new Translation {
                                      Value = translation.Value + this.TileLocations[factoryTileContentsBuffer.Length]
                                  });
+                                 
+                                 entityCommandBuffer.AddComponent(tileEntity, parentComponent);
 
                                  factoryTileContentsBuffer.Add(new FactoryTileContentsElement {
                                      TileEntity = tileEntity
