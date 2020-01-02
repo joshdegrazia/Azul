@@ -28,8 +28,6 @@ namespace Activities.Systems {
                 UnityEngine.Debug.LogWarning("Found two EnableFactoryTileMouseClick props this frame");
             }
 
-            UnityEngine.Debug.Log("Enabling/disabling factory tile clicks");
-
             this.PropsData = base.GetComponentDataFromEntity<EnableFactoryTileMouseClickProps>(true);
             this.ListenForMouseClickData = base.GetComponentDataFromEntity<ListenForMouseClick>(false);
             this.FactoryTileBufferData = base.GetBufferFromEntity<FactoryTileContentsElement>(true);
@@ -37,7 +35,6 @@ namespace Activities.Systems {
             Entity propsEntity = this.PropsQuery.GetSingletonEntity();
             EntityCommandBuffer commandBuffer = new EntityCommandBuffer(Allocator.TempJob);
 
-            // todo: could just iterate over each of the FactoryTileContentsElement components?
             base.Entities.WithAll<FactoryTile>()
                          .WithoutBurst()
                          .ForEach((in Entity entity) => {
@@ -45,13 +42,10 @@ namespace Activities.Systems {
                 DynamicBuffer<FactoryTileContentsElement> factoryTileBuffer = this.FactoryTileBufferData[entity];
 
                 foreach (FactoryTileContentsElement element in factoryTileBuffer) {
-                    UnityEngine.Debug.Log("Checking element...");
                     if (props.Enabled && !this.ListenForMouseClickData.Exists(element.TileEntity)) {
                         commandBuffer.AddComponent<ListenForMouseClick>(element.TileEntity);
-                        UnityEngine.Debug.Log("Mouse click added");
                     } else if (!props.Enabled && this.ListenForMouseClickData.Exists(element.TileEntity)) {
                         commandBuffer.RemoveComponent<ListenForMouseClick>(element.TileEntity);
-                        UnityEngine.Debug.Log("Mouse click removed");
                     }
                 }
             }).Run();

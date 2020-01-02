@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Activities.Components;
 using Azul.Components;
+using Input.Components;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
@@ -73,7 +74,8 @@ namespace Activities.Systems {
                             Value = translation.Value
                         });
 
-                        entityCommandBuffer.RemoveComponent(tileEntity, typeof(ParentFactoryTile));
+                        entityCommandBuffer.RemoveComponent<ParentFactoryTile>(tileEntity);
+                        entityCommandBuffer.RemoveComponent<ListenForMouseClick>(tileEntity);
                     } else if (props.FactoryTile != centerTileEntity) {
                         Translation translation = translationData[centerTileEntity];
 
@@ -102,7 +104,6 @@ namespace Activities.Systems {
                 entityCommandBuffer.AddComponent(disableFactoryTiles, new EnableFactoryTileMouseClickProps {
                     Enabled = false
                 });
-
             }).Run();
 
             entityCommandBuffer.Playback(base.EntityManager);
