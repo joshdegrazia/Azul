@@ -7,11 +7,10 @@ using Unity.Entities;
 using Unity.Jobs;
 using Unity.Transforms;
 using Utilities.Components;
-using Utilities.Systems;
 
-namespace Azul.Systems.Commands {
+namespace Azul.Systems.Initialization {
     [AlwaysSynchronizeSystem]
-    [UpdateBefore(typeof(RequiresInitializationEndFrameSystem))]
+    [UpdateInGroup(typeof(InitializationSystemGroup))]
     public class InitializeBagSystem : JobComponentSystem {
         protected override JobHandle OnUpdate(JobHandle inputDeps) {
             EntityCommandBuffer entityCommandBuffer = new EntityCommandBuffer(Allocator.TempJob);

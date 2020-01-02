@@ -74,6 +74,8 @@ namespace Activities.Systems {
                         entityCommandBuffer.RemoveComponent(tileEntity, typeof(ParentFactoryTile));
 
                         factoryTileBuffer.RemoveAt(i);
+                        
+                        UnityEngine.Debug.Log("added tile to selection area buffer");
                     } else if (props.FactoryTile != centerTileEntity) {
                         Translation translation = translationData[centerTileEntity];
 
@@ -84,7 +86,19 @@ namespace Activities.Systems {
                         entityCommandBuffer.SetComponent(tileEntity, new ParentFactoryTile {
                             Value = centerTileEntity
                         });
+
+                        UnityEngine.Debug.Log("added tile to center");
+                    } else {
+                        UnityEngine.Debug.Log("heck");
                     }
+
+                    entityCommandBuffer.SetComponent(selectionAreaEntity, new TileTypeComponent {
+                        Value = props.TileType
+                    });
+                }
+                
+                if (factoryTileBuffer.Length == 0) {
+                    entityCommandBuffer.DestroyEntity(props.FactoryTile);
                 }
             }).Run();
 

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2725970457465265849}
   - component: {fileID: 2725970457465265850}
   - component: {fileID: 8867638354941223960}
-  - component: {fileID: 3210469507838590650}
+  - component: {fileID: 5776085092382581919}
   m_Layer: 0
   m_Name: Bag
   m_TagString: Untagged
@@ -107,7 +107,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ConversionMode: 0
---- !u!114 &3210469507838590650
+--- !u!114 &5776085092382581919
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -116,6 +116,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 2725970457465265851}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cdbb81704589d426bb660b0fb695e54d, type: 3}
+  m_Script: {fileID: 11500000, guid: d24e6d4201ada4b649c8cd357a560ed0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

@@ -1,9 +1,8 @@
-using Azul.Model;
 using Unity.Entities;
 
 namespace Azul.Components {
     [GenerateAuthoringComponent]
-    public struct SelectionArea : IComponentData {
-        
+    public struct TileSlotCollectionIndex : IComponentData {
+        public int Value;
     }
 }

@@ -5,6 +5,7 @@ namespace Azul.Model {
         Cyan,
         Red,
         Yellow,
-        FirstPlayer
+        FirstPlayer,
+        None
     }
 }

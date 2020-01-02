@@ -5,8 +5,8 @@ using Unity.Jobs;
 using Utilities.Components;
 using Utilities.Systems;
 
-namespace Azul.Systems {
-    [UpdateBefore(typeof(RequiresInitializationEndFrameSystem))]
+namespace Azul.Systems.Initialization {
+    [UpdateInGroup(typeof(InitializationSystemGroup))]
     public class InitializeSelectionAreaSystem : JobComponentSystem {
         protected override JobHandle OnUpdate(JobHandle inputDeps) {
             EntityCommandBuffer entityCommandBuffer = new EntityCommandBuffer(Allocator.TempJob);

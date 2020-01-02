@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 2933221518996994151}
   - component: {fileID: 8025206239656193223}
   - component: {fileID: 3775319695906307177}
+  - component: {fileID: 2208518167798114702}
+  - component: {fileID: -6729152456667384884}
   m_Layer: 0
   m_Name: TileSlot
   m_TagString: Untagged
@@ -79,3 +81,28 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!114 &2208518167798114702
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8179709449974250542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65b6f0bed8411448091581dea8fc6561, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-6729152456667384884
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8179709449974250542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea7d7495833204790ba1d3a8755397f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ConversionMode: 0
