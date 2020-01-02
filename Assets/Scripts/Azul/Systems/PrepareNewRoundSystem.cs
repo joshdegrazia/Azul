@@ -44,8 +44,8 @@ namespace Azul.Systems {
             }
 
             Entity bagEntity = this.BagQuery.GetSingletonEntity();
-
             DynamicBuffer<BagContentsElement> bagTileBuffer = base.EntityManager.GetBuffer<BagContentsElement>(bagEntity);
+            BufferFromEntity<FactoryTileContentsElement> factoryTileContentsBufferData = base.GetBufferFromEntity<FactoryTileContentsElement>();
 
             EntityCommandBuffer entityCommandBuffer = new EntityCommandBuffer(Allocator.TempJob);
 
@@ -53,7 +53,7 @@ namespace Azul.Systems {
                          .WithNone<CenterFactoryTile>()
                          .WithoutBurst()
                          .ForEach((Entity factoryTileEntity, in Translation translation) => {
-                             DynamicBuffer<FactoryTileContentsElement> factoryTileContentsBuffer = entityCommandBuffer.AddBuffer<FactoryTileContentsElement>(factoryTileEntity);
+                             DynamicBuffer<FactoryTileContentsElement> factoryTileContentsBuffer = factoryTileContentsBufferData[factoryTileEntity];
                              
                              ParentFactoryTile parentComponent = new ParentFactoryTile {
                                  Value = factoryTileEntity
