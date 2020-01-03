@@ -58,7 +58,8 @@ namespace Activities.Systems {
                          .ForEach((in MoveFromFactoryTileToSelectedAreaProps props) => {
                 DynamicBuffer<FactoryTileContentsElement> factoryTileBuffer = factoryTileBuffers[props.FactoryTile];
                 DynamicBuffer<SelectionAreaContentsElement> selectionAreaBuffer = selectionAreaBuffers[selectionAreaEntity];
-                
+                DynamicBuffer<FactoryTileContentsElement> centerTileBuffer = factoryTileBuffers[centerTileEntity];
+
                 for (int i = factoryTileBuffer.Length - 1; i >= 0; i--) {
                     Entity tileEntity = factoryTileBuffer[i].TileEntity;
                     TileTypeComponent tileType = tileTypeData[tileEntity];
@@ -76,9 +77,11 @@ namespace Activities.Systems {
 
                         entityCommandBuffer.RemoveComponent<ParentFactoryTile>(tileEntity);
                         entityCommandBuffer.RemoveComponent<ListenForMouseClick>(tileEntity);
+
+                        factoryTileBuffer.RemoveAt(i);
                     } else if (props.FactoryTile != centerTileEntity) {
                         Translation translation = translationData[centerTileEntity];
-
+                    
                         entityCommandBuffer.SetComponent(tileEntity, new Translation {
                             Value = translation.Value
                         });
@@ -86,17 +89,23 @@ namespace Activities.Systems {
                         entityCommandBuffer.SetComponent(tileEntity, new ParentFactoryTile {
                             Value = centerTileEntity
                         });
+
+                        centerTileBuffer.Add(new FactoryTileContentsElement {
+                            TileEntity = tileEntity,
+                        });
+
+                        factoryTileBuffer.RemoveAt(i);
                     }
-
-                    factoryTileBuffer.RemoveAt(i);
-
-                    entityCommandBuffer.SetComponent(selectionAreaEntity, new TileTypeComponent {
-                        Value = props.TileType
-                    });
                 }
                 
                 if (factoryTileBuffer.Length == 0) {             
                     entityCommandBuffer.DestroyEntity(props.FactoryTile);
+                }
+
+                if (selectionAreaBuffer.Length > 0) {
+                    entityCommandBuffer.SetComponent(selectionAreaEntity, new TileTypeComponent {
+                        Value = props.TileType
+                    });
                 }
 
                 Entity disableFactoryTiles = entityCommandBuffer.CreateEntity();
@@ -104,6 +113,10 @@ namespace Activities.Systems {
                 entityCommandBuffer.AddComponent(disableFactoryTiles, new EnableFactoryTileMouseClickProps {
                     Enabled = false
                 });
+
+                Entity repositionTiles = entityCommandBuffer.CreateEntity();
+                entityCommandBuffer.AddComponent<DestroyEntityAfterUpdate>(repositionTiles);
+                entityCommandBuffer.AddComponent<RepositionTileElementsProps>(repositionTiles);
             }).Run();
 
             entityCommandBuffer.Playback(base.EntityManager);

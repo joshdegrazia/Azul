@@ -1,3 +1,4 @@
+using Activities.Components;
 using Azul.Components;
 using Azul.Model;
 using Input.Components;
@@ -7,6 +8,7 @@ using Unity.Entities;
 using Unity.Jobs;
 using Unity.Transforms;
 using UnityEngine;
+using Utilities.Components;
 
 namespace Azul.Systems {
 
@@ -64,11 +66,12 @@ namespace Azul.Systems {
                 
                 // move the tile into the open spot.
                 Entity tile = selectionAreaBuffer[selectionAreaBuffer.Length - 1].TileEntity;
-                selectionAreaBuffer.RemoveAt(selectionAreaBuffer.Length - 1);
                 
                 // todo: update tile slot collection so it tells you the next available index
                 for (int i = 0; i < tileSlots.Length; i++) {
                     if (tileSlots[i].Contents == Entity.Null) {
+                        selectionAreaBuffer.RemoveAt(selectionAreaBuffer.Length - 1);
+                        
                         tileSlots[i] = new TileSlotCollectionElement {
                             TileSlot = tileSlots[i].TileSlot,
                             Contents = tile
@@ -79,8 +82,16 @@ namespace Azul.Systems {
                             Value = tileSlotLocality.Position
                         });
 
-                        return;
+                        break;
                     }
+                }
+
+                if (selectionAreaBuffer.Length == 0) {
+                    Entity enableFactoryTileClicks = entityCommandBuffer.CreateEntity();
+                    entityCommandBuffer.AddComponent<DestroyEntityAfterUpdate>(enableFactoryTileClicks);
+                    entityCommandBuffer.AddComponent(enableFactoryTileClicks, new EnableFactoryTileMouseClickProps {
+                        Enabled = true
+                    });
                 }
             }).Run();
 
