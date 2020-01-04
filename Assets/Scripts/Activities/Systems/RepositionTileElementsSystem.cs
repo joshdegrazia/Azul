@@ -1,5 +1,6 @@
 using Activities.Components;
 using Azul.Components;
+using Azul.Utilities;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
@@ -40,7 +41,7 @@ namespace Activities.Systems {
 
                 for (int i = 0; i < tileContents.Length; i++) {
                     entityCommandBuffer.SetComponent(tileContents[i].TileEntity, new Translation {
-                        Value = localToWorld.Position + this.PositionAroundCircle(CenterTileContentsRadius, i, tileContents.Length)
+                        Value = localToWorld.Position + PositionUtils.PositionAroundCircle(CenterTileContentsRadius, i, tileContents.Length)
                     });
                 }
             }).Run();
@@ -53,7 +54,7 @@ namespace Activities.Systems {
 
                 for (int i = 0; i < tileContents.Length; i++) {
                     entityCommandBuffer.SetComponent(tileContents[i].TileEntity, new Translation {
-                        Value = localToWorld.Position + this.PositionAroundCircle(SelectionAreaContentsRadius, i, tileContents.Length)
+                        Value = localToWorld.Position + PositionUtils.PositionAroundCircle(SelectionAreaContentsRadius, i, tileContents.Length)
                     });
                 }
             }).Run();
@@ -62,11 +63,6 @@ namespace Activities.Systems {
             entityCommandBuffer.Dispose();
 
             return default;
-        }
-
-        private float3 PositionAroundCircle(float radius, int index, int max) {
-            float angle = (index * 2 * math.PI) / max;
-            return new float3(radius * math.cos(angle), 0, radius * math.sin(angle));
         }
     }
 }

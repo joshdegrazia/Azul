@@ -34,5 +34,10 @@ namespace Azul.Behaviours {
             this.EntityManager.CreateEntity(typeof(CalculateEndOfRoundProps),
                                             typeof(DestroyEntityAfterUpdate));
         }
+
+        public void OnCreateCommonBoardButtonClicked() {
+            this.EntityManager.CreateEntity(typeof(CreateCommonBoardProps),
+                                            typeof(DestroyEntityAfterUpdate));
+        }
     }
 }

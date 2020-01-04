@@ -4,12 +4,18 @@ using UnityEngine;
 
 namespace Azul.Behaviours {
     public class PrefabStore : MonoBehaviour {
+        [SerializeField] private GameObject FactoryTileGameObjectPrefab;
+        [SerializeField] private GameObject CenterFactoryTileGameObjectPrefab;
+        
         [SerializeField] private GameObject BlackTileGameObjectPrefab;
         [SerializeField] private GameObject BlueTileGameObjectPrefab;
         [SerializeField] private GameObject CyanTileGameObjectPrefab;
         [SerializeField] private GameObject RedTileGameObjectPrefab;
         [SerializeField] private GameObject YellowTileGameObjectPrefab;
 
+        public Entity FactoryTilePrefab { get; private set; }
+        public Entity CenterFactoryTilePrefab { get; private set; }
+ 
         public Entity BlackTilePrefab { get; private set; }
         public Entity BlueTilePrefab { get; private set; }
         public Entity CyanTilePrefab { get; private set; }
@@ -26,6 +32,10 @@ namespace Azul.Behaviours {
             
             GameObjectConversionSettings settings = GameObjectConversionSettings.FromWorld(World.DefaultGameObjectInjectionWorld, 
                                                                                            new BlobAssetStore());
+
+            this.FactoryTilePrefab = GameObjectConversionUtility.ConvertGameObjectHierarchy(this.FactoryTileGameObjectPrefab, settings);
+            this.CenterFactoryTilePrefab = GameObjectConversionUtility.ConvertGameObjectHierarchy(this.CenterFactoryTileGameObjectPrefab, settings);
+
             this.BlackTilePrefab = GameObjectConversionUtility.ConvertGameObjectHierarchy(this.BlackTileGameObjectPrefab, settings);
             this.BlueTilePrefab = GameObjectConversionUtility.ConvertGameObjectHierarchy(this.BlueTileGameObjectPrefab, settings);
             this.CyanTilePrefab = GameObjectConversionUtility.ConvertGameObjectHierarchy(this.CyanTileGameObjectPrefab, settings);
