@@ -19,21 +19,17 @@ namespace Activities.Systems {
     [UpdateBefore(typeof(DestroyEntityAfterUpdateSystem))]
     public class MoveFromFactoryTileToSelectedAreaSystem : JobComponentSystem {
         private EntityQuery PropsQuery;
+        private EntityQuery GameBoardQuery;
         private EntityQuery SelectionAreaQuery;
         private EntityQuery CenterTileQuery;
+        private EntityQuery FactoryTileQuery;
 
         protected override void OnCreate() {
-            this.PropsQuery = base.GetEntityQuery(new EntityQueryDesc {
-                All = new ComponentType[] { typeof(MoveFromFactoryTileToSelectedAreaProps) }
-            });
-            
-            this.SelectionAreaQuery = base.GetEntityQuery(new EntityQueryDesc {
-                All = new ComponentType[] { typeof(SelectionArea) }
-            });
-
-            this.CenterTileQuery = base.GetEntityQuery(new EntityQueryDesc {
-                All = new ComponentType[] { typeof(CenterFactoryTile) }
-            });
+            this.PropsQuery = base.GetEntityQuery(typeof(MoveFromFactoryTileToSelectedAreaProps));
+            this.GameBoardQuery = base.GetEntityQuery(typeof(GameBoard));
+            this.SelectionAreaQuery = base.GetEntityQuery(typeof(SelectionArea));
+            this.CenterTileQuery = base.GetEntityQuery(typeof(CenterFactoryTile));
+            this.FactoryTileQuery = base.GetEntityQuery(typeof(FactoryTile));
         }
 
         protected override JobHandle OnUpdate(JobHandle inputDeps) {
@@ -47,6 +43,9 @@ namespace Activities.Systems {
             // could have a private get method that checks for null and then fills
             Entity selectionAreaEntity = this.SelectionAreaQuery.GetSingletonEntity();
             Entity centerTileEntity = this.CenterTileQuery.GetSingletonEntity();
+            Entity gameBoardEntity = this.GameBoardQuery.GetSingletonEntity();
+
+            int factoryTileCount = this.FactoryTileQuery.CalculateEntityCount();
 
             BufferFromEntity<FactoryTileContentsElement> factoryTileBuffers = base.GetBufferFromEntity<FactoryTileContentsElement>();
             BufferFromEntity<SelectionAreaContentsElement> selectionAreaBuffers = base.GetBufferFromEntity<SelectionAreaContentsElement>();
@@ -97,8 +96,12 @@ namespace Activities.Systems {
                         factoryTileBuffer.RemoveAt(i);
                     }
                 }
-                
-                if (factoryTileBuffer.Length == 0) {             
+                if (props.FactoryTile != centerTileEntity 
+                    || (factoryTileCount == 1 && factoryTileBuffer.Length == 0)) {
+                    entityCommandBuffer.SetComponent(gameBoardEntity, new FactoryTileCount {
+                        Value = factoryTileCount - 1
+                    });
+
                     entityCommandBuffer.DestroyEntity(props.FactoryTile);
                 }
 

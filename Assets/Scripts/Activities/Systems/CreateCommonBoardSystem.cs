@@ -28,6 +28,7 @@ namespace Activities.Systems {
         }
 
         protected override JobHandle OnUpdate(JobHandle inputDeps) {
+            Entity gameBoardEntity = this.GameBoardQuery.GetSingletonEntity();
             GameBoard gameBoard = this.GameBoardQuery.GetSingleton<GameBoard>();
             int factoryTileCount = CreateCommonBoardSystem.FactoryTilesForPlayerCount[gameBoard.PlayerCount];
             
@@ -45,6 +46,10 @@ namespace Activities.Systems {
                 }
 
                 ecb.Instantiate(PrefabStore.Instance.CenterFactoryTilePrefab);
+
+                ecb.SetComponent(gameBoardEntity, new FactoryTileCount {
+                    Value = factoryTileCount + 1
+                });
             }).Run();
 
             ecb.Playback(base.EntityManager);
