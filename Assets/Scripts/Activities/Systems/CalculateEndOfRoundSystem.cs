@@ -5,15 +5,16 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Transforms;
-using Utilities.Systems;
 
 namespace Activities.Systems {
     [AlwaysSynchronizeSystem]
     public class CalculateEndOfRoundSystem : JobComponentSystem {
         private EntityQuery PropsQuery;
+        private EntityQuery BoxQuery;
         
         protected override void OnCreate() {
             this.PropsQuery = base.GetEntityQuery(typeof(CalculateEndOfRoundProps));
+            this.BoxQuery = base.GetEntityQuery(typeof(Box));
         }
 
         protected override JobHandle OnUpdate(JobHandle inputDeps) {
@@ -25,6 +26,10 @@ namespace Activities.Systems {
             ComponentDataFromEntity<LocalToWorld> localToWorldData = base.GetComponentDataFromEntity<LocalToWorld>();
             
             BufferFromEntity<TileSlotCollectionElement> tileSlotCollectionData = base.GetBufferFromEntity<TileSlotCollectionElement>();
+            
+            Entity boxEntity = this.BoxQuery.GetSingletonEntity();
+            BufferFromEntity<BoxContentsElement> boxContentsData = base.GetBufferFromEntity<BoxContentsElement>();
+            DynamicBuffer<BoxContentsElement> boxContents = boxContentsData[boxEntity];
 
             EntityCommandBuffer entityCommandBuffer = new EntityCommandBuffer(Allocator.TempJob);
 
@@ -44,9 +49,18 @@ namespace Activities.Systems {
                 }
 
                 // remove the tiles from the collection and put them in the box
-                // for (int i = patternLineCollection.Length - 1; i >= 1; i--) {
-                    
-                // }
+                LocalToWorld boxLocalToWorld = localToWorldData[boxEntity];
+                for (int i = patternLineCollection.Length - 1; i >= 1; i--) {
+                    Entity tile = patternLineCollection[i].Contents;
+
+                    boxContents.Add(new BoxContentsElement {
+                        TileEntity = tile
+                    });
+
+                    entityCommandBuffer.SetComponent(tile, new Translation {
+                        Value = boxLocalToWorld.Position
+                    });
+                }
                 
                 DynamicBuffer<TileSlotCollectionElement> wallRowCollection = tileSlotCollectionData[patternLine.WallRowEntity];
 
@@ -55,7 +69,6 @@ namespace Activities.Systems {
                     TileTypeComponent tileSlotType = tileTypeData[element.TileSlot];
 
                     // there shouldn't be another tile here, so we won't check to see if the spot isn't occupied
-                    UnityEngine.Debug.Log(patternLineType.Value + " " + tileSlotType.Value + " " + tileSlotType.Value.Equals(patternLineType.Value));
                     if (tileSlotType.Value.Equals(patternLineType.Value)) {
 
                         Entity firstTileEntity = patternLineCollection[0].Contents;
