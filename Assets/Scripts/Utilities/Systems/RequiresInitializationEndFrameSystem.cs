@@ -11,10 +11,12 @@ namespace Utilities.Systems {
         protected override JobHandle OnUpdate(JobHandle inputDeps) {
             EntityCommandBuffer entityCommandBuffer = new EntityCommandBuffer(Allocator.TempJob);
 
-            Entities.WithAll<RequiresInitialization>()
-                    .ForEach((Entity entity) => {
-                        entityCommandBuffer.RemoveComponent<RequiresInitialization>(entity);
-                    }).Run();
+            //? could make RequiresInitialization a shared component and only perform this job on false
+            base.Entities.ForEach((ref Entity entity, ref RequiresInitialization requiresInitialization) => {
+                if (!requiresInitialization.Value) {
+                    entityCommandBuffer.RemoveComponent<RequiresInitialization>(entity);
+                }
+            }).Run();
 
             entityCommandBuffer.Playback(base.EntityManager);
             entityCommandBuffer.Dispose();

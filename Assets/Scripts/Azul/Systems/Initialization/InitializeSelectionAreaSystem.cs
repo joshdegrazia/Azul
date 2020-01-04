@@ -11,11 +11,11 @@ namespace Azul.Systems.Initialization {
         protected override JobHandle OnUpdate(JobHandle inputDeps) {
             EntityCommandBuffer entityCommandBuffer = new EntityCommandBuffer(Allocator.TempJob);
             
-            base.Entities.WithAll<RequiresInitialization>()
-                         .WithAll<SelectionArea>()
-                         .ForEach((Entity entity) => {
-                             entityCommandBuffer.AddBuffer<SelectionAreaContentsElement>(entity);
-                         }).Run();
+            base.Entities.WithAll<SelectionArea>()
+                         .ForEach((ref RequiresInitialization requiresInitialization, ref Entity entity) => {
+                entityCommandBuffer.AddBuffer<SelectionAreaContentsElement>(entity);
+                requiresInitialization.Value = false;
+            }).Run();
 
             entityCommandBuffer.Playback(base.EntityManager);
             entityCommandBuffer.Dispose();

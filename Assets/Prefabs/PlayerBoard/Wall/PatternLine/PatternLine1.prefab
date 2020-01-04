@@ -49,6 +49,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c2ca4fe1601b413bbcb84ddb334151f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  WallRowEntity: {fileID: 0}
 --- !u!114 &5394987967075512499
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -101,6 +102,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d24e6d4201ada4b649c8cd357a560ed0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Value: 1
 --- !u!114 &889605780668238239
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -126,6 +128,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d24e6d4201ada4b649c8cd357a560ed0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Value: 1
 --- !u!114 &3744466284174222403
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -10,11 +10,11 @@ namespace Azul.Systems.Initialization {
         protected override JobHandle OnUpdate(JobHandle inputDeps) {
             EntityCommandBuffer entityCommandBuffer = new EntityCommandBuffer(Allocator.TempJob);
             
-            base.Entities.WithAll<RequiresInitialization>()
-                         .WithAll<TileSlotCollection>()
-                         .ForEach((Entity entity) => {
-                             entityCommandBuffer.AddBuffer<TileSlotCollectionElement>(entity);
-                         }).Run();
+            base.Entities.WithAll<TileSlotCollection>()
+                         .ForEach((ref RequiresInitialization requiresInitialization, ref Entity entity) => {
+                entityCommandBuffer.AddBuffer<TileSlotCollectionElement>(entity);
+                requiresInitialization.Value = false;
+            }).Run();
 
             entityCommandBuffer.Playback(base.EntityManager);
             entityCommandBuffer.Dispose();

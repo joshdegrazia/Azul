@@ -12,10 +12,9 @@ namespace Azul.Systems.Initialization {
             BufferFromEntity<TileSlotCollectionElement> tileSlotBuffers = base.GetBufferFromEntity<TileSlotCollectionElement>();
             ComponentDataFromEntity<TileSlotCollectionIndex> tileSlotIndices = base.GetComponentDataFromEntity<TileSlotCollectionIndex>();
 
-            base.Entities.WithAll<RequiresInitialization>()
-                         .WithAll<TileSlot>()
+            base.Entities.WithAll<TileSlot>()
                          .WithoutBurst()
-                         .ForEach((in Entity tileSlot, in ParentTileSlotCollection parent, in TileSlotCollectionIndex index) => {
+                         .ForEach((ref RequiresInitialization requiresInitialization, in Entity tileSlot, in ParentTileSlotCollection parent, in TileSlotCollectionIndex index) => {
                              DynamicBuffer<TileSlotCollectionElement> tileSlotCollectionBuffer = tileSlotBuffers[parent.PatternLine];
                              
                              if (index.Value >= tileSlotCollectionBuffer.Length) {
@@ -41,19 +40,22 @@ namespace Azul.Systems.Initialization {
 
                                  Debug.LogError("Element was not inserted");
                              }
+
+                             requiresInitialization.Value = false;
                          }).Run();
 
-            base.Entities.WithAll<RequiresInitialization>()
-                         .WithAll<TileSlot>()
+            base.Entities.WithAll<TileSlot>()
                          .WithNone<TileSlotCollectionIndex>()
                          .WithoutBurst()
-                         .ForEach((in Entity tileSlot, in ParentTileSlotCollection parent) => {
+                         .ForEach((ref RequiresInitialization requiresInitialization, in Entity tileSlot, in ParentTileSlotCollection parent) => {
                 DynamicBuffer<TileSlotCollectionElement> tileSlotCollectionBuffer = tileSlotBuffers[parent.PatternLine];
 
                 tileSlotCollectionBuffer.Add(new TileSlotCollectionElement {
                     TileSlot = tileSlot,
                     Contents = Entity.Null
                 });
+
+                requiresInitialization.Value = false;
             }).Run();
 
             return default;

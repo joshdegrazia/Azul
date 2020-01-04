@@ -12,9 +12,9 @@ namespace Azul.Systems.Initialization {
             EntityCommandBuffer entityCommandBuffer = new EntityCommandBuffer(Allocator.TempJob);
 
             base.Entities.WithAll<Box>()
-                         .WithAll<RequiresInitialization>()
-                         .ForEach((in Entity entity) => {
+                         .ForEach((ref RequiresInitialization requiresInitialization, in Entity entity) => {
                 entityCommandBuffer.AddBuffer<BoxContentsElement>(entity);
+                requiresInitialization.Value = false;
             }).Run();
 
             entityCommandBuffer.Playback(base.EntityManager);

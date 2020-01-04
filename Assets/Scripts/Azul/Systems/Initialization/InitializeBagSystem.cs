@@ -16,9 +16,8 @@ namespace Azul.Systems.Initialization {
             EntityCommandBuffer entityCommandBuffer = new EntityCommandBuffer(Allocator.TempJob);
             
             base.Entities.WithAll<Bag>()
-                    .WithAll<RequiresInitialization>()
                     .WithoutBurst()
-                    .ForEach((Entity bagEntity, in Translation translation) => {
+                    .ForEach((ref RequiresInitialization requiresInitialization, ref Entity bagEntity, in Translation translation) => {
                         DynamicBuffer<BagContentsElement> buffer = entityCommandBuffer.AddBuffer<BagContentsElement>(bagEntity);
 
                         List<Entity> list = new List<Entity>(AzulConstants.TilesPerColor * 5);
@@ -35,6 +34,8 @@ namespace Azul.Systems.Initialization {
                                 });
                             }
                         }
+
+                        requiresInitialization.Value = false;
                     }).Run();
 
             entityCommandBuffer.Playback(base.EntityManager);
