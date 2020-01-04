@@ -63,6 +63,11 @@ namespace Azul.Systems {
                 } else if (selectionAreaBuffer.Length == 0) {
                     return;
                 }
+
+                if (patternLineType.Value == TileType.None) {
+                    patternLineType = selectionAreaType;
+                    entityCommandBuffer.SetComponent(parent.PatternLine, selectionAreaType);
+                }
                 
                 // move the tile into the open spot.
                 Entity tile = selectionAreaBuffer[selectionAreaBuffer.Length - 1].TileEntity;

@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3775319695906307177}
   - component: {fileID: 2208518167798114702}
   - component: {fileID: -6729152456667384884}
+  - component: {fileID: -1687176946727089624}
   m_Layer: 0
   m_Name: TileSlot
   m_TagString: Untagged
@@ -106,3 +107,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ConversionMode: 0
+--- !u!114 &-1687176946727089624
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8179709449974250542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1982266ea0d004bb49f1ae32dfb1d7f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Value: 6

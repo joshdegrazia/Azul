@@ -10,7 +10,7 @@ PrefabInstance:
     - target: {fileID: 1203203719186824095, guid: 2e89b4fab19104afea0ef4547f116493,
         type: 3}
       propertyPath: m_Name
-      value: WallRow
+      value: Row0
       objectReference: {fileID: 0}
     - target: {fileID: 4154772783315696775, guid: 2e89b4fab19104afea0ef4547f116493,
         type: 3}

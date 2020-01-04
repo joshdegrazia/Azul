@@ -29,8 +29,6 @@ namespace Activities.Systems {
             if (this.PropsQuery.CalculateEntityCount() == 0) {
                 return default;
             }
-
-            UnityEngine.Debug.Log("running system");
             
             EntityCommandBuffer entityCommandBuffer = new EntityCommandBuffer(Allocator.TempJob);
             
@@ -38,7 +36,6 @@ namespace Activities.Systems {
             base.Entities.WithAll<CenterFactoryTile>()
                          .WithoutBurst()
                          .ForEach((in Entity entity, in LocalToWorld localToWorld) => {
-                UnityEngine.Debug.Log("run center tiles");
                 DynamicBuffer<FactoryTileContentsElement> tileContents = factoryTileContentsData[entity];
 
                 for (int i = 0; i < tileContents.Length; i++) {
@@ -52,7 +49,6 @@ namespace Activities.Systems {
             base.Entities.WithAll<SelectionArea>()
                          .WithoutBurst()
                          .ForEach((in Entity entity, in LocalToWorld localToWorld) => {
-                UnityEngine.Debug.Log("run selected area");
                 DynamicBuffer<SelectionAreaContentsElement> tileContents = selectionAreaContentsData[entity];
 
                 for (int i = 0; i < tileContents.Length; i++) {
